@@ -28,13 +28,13 @@ modelrp=st.secrets['modelrp']
 def load_llm():
     return Replicate(
         model=modelrp,
-        model_kwargs={"temperature": 0.6, "max_length": 512, "top_p": 1},
+        model_kwargs={"temperature": 0.5, "max_length": 512, "top_p": 1},
     )
 
 modelhf=st.secrets["modelhf"]
 
 def load_qa_bot():
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
+    embeddings = HuggingFaceEmbeddings(model_name=modelhf,
                                        model_kwargs={'device': 'cpu'})
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
     llm = load_llm()
@@ -57,11 +57,9 @@ def app():
         
         try:
             my_bar.progress(10)
-            time.sleep(0.01)
 
             qa_bot = load_qa_bot()
             my_bar.progress(50)
-            time.sleep(0.01)
 
             response = qa_bot({'query': user_input})
             my_bar.progress(100)
