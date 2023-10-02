@@ -23,7 +23,7 @@ Question: {question}
 Only return the helpful answer below and nothing else.
 Helpful answer:
 """
-modelrp=st.secrets['model']
+modelrp=st.secrets['modelrp']
 
 def load_llm():
     return Replicate(
@@ -31,7 +31,7 @@ def load_llm():
         input={"temperature": 0.6, "max_length": 512, "top_p": 1},
     )
 
-modelhf=st.secrets["model"]
+modelhf=st.secrets["modelhf"]
 
 def load_qa_bot():
     # Initialize loaders, embeddings, and other components as necessary
