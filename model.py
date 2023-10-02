@@ -6,6 +6,7 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.llms import Replicate
 import replicate
+import time
 
 
 
@@ -54,14 +55,28 @@ def app():
     st.title('Airlast\'s HVAC Q&A Bot')
     user_input = st.text_area("Ask anything related to HVAC:")
     if st.button('Submit'):
-        if user_input:
-            with st.spinner('Loading and processing...'):
-                try:
-                    qa_bot = load_qa_bot()
-                    response = qa_bot({'query': user_input})
-                    st.write(response['result'])
-                except Exception as e:
-                    st.error(f"An error occurred: {str(e)}") 
+        progress_text = "Operation in progress. Please wait."
+        my_bar = st.progress(0)
+        progress_caption = st.caption(progress_text)
+        
+        try:
+            my_bar.progress(10)
+            time.sleep(0.1)
+
+            qa_bot = load_qa_bot()
+            my_bar.progress(50)
+            time.sleep(0.1)
+
+            response = qa_bot({'query': user_input})
+            my_bar.progress(100)
+
+            st.write(response['result'])
+
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
+
+        progress_caption.empty()
+        my_bar.empty()
                     
 
 
