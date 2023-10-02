@@ -43,7 +43,7 @@ def load_qa_bot():
     return RetrievalQA.from_chain_type(llm=llm,
                                        chain_type='stuff',
                                        retriever=db.as_retriever(search_kwargs={'k': 2}),
-                                       return_source_documents=False,
+                                       return_source_documents=True,
                                        chain_type_kwargs={'prompt': prompt})
 
 
@@ -57,11 +57,11 @@ def app():
         
         try:
             my_bar.progress(10)
-            time.sleep(0.1)
+            time.sleep(0.01)
 
             qa_bot = load_qa_bot()
             my_bar.progress(50)
-            time.sleep(0.1)
+            time.sleep(0.01)
 
             response = qa_bot({'query': user_input})
             my_bar.progress(100)
