@@ -1,5 +1,3 @@
-import os
-import re
 import streamlit as st
 from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain import PromptTemplate
@@ -12,7 +10,7 @@ import replicate
 
 
 # Setting up the environment variable
-os.environ["REPLICATE_API_TOKEN"] = "r8_ZvJsXtQhzLSwLt3yUZS8OjmUQ55sqSX2mngHz"
+REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
 
 # Define constants
 DB_FAISS_PATH = 'vectorstore/db_faiss'
@@ -25,12 +23,15 @@ Question: {question}
 Only return the helpful answer below and nothing else.
 Helpful answer:
 """
+modelrp=st.secrets['model']
 
 def load_llm():
     return Replicate(
-        model="a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5",
+        model=modelrp,
         input={"temperature": 0.6, "max_length": 512, "top_p": 1},
     )
+
+modelhf=st.secrets["model"]
 
 def load_qa_bot():
     # Initialize loaders, embeddings, and other components as necessary
