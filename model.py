@@ -1,5 +1,4 @@
 import streamlit as st
-from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain import PromptTemplate
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import FAISS
@@ -35,9 +34,6 @@ def load_llm():
 modelhf=st.secrets["modelhf"]
 
 def load_qa_bot():
-    # Initialize loaders, embeddings, and other components as necessary
-    # Return the initialized RetrievalQA object
-    
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
                                        model_kwargs={'device': 'cpu'})
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
@@ -46,7 +42,7 @@ def load_qa_bot():
     
     return RetrievalQA.from_chain_type(llm=llm,
                                        chain_type='stuff',
-                                       retriever=db.as_retriever(search_kwargs={'k': 1}),
+                                       retriever=db.as_retriever(search_kwargs={'k': 2}),
                                        return_source_documents=False,
                                        chain_type_kwargs={'prompt': prompt})
 
