@@ -5,7 +5,6 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.llms import Replicate
 import replicate
-import time
 
 
 
