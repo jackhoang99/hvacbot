@@ -19,7 +19,6 @@ If you don't know the answer, just say that you don't know, don't try to make up
 Context: {context}
 Question: {question}
 
-Only return the helpful answer below and nothing else.
 Helpful answer:
 """
 modelrp=st.secrets['modelrp']
@@ -27,7 +26,7 @@ modelrp=st.secrets['modelrp']
 def load_llm():
     return Replicate(
         model=modelrp,
-        model_kwargs={"temperature": 0.5, "max_length": 512, "top_p": 1},
+        model_kwargs={"temperature": 0.5, "max_new_tokens": 512, "top_p": 1},
     )
 
 modelhf=st.secrets["modelhf"]
