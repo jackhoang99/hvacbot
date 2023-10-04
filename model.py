@@ -47,8 +47,8 @@ if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 
 placeholder = st.empty()
-actual_email = st.secrets['username']
-actual_password = st.secrets['password']
+actual_email = "airlast"
+actual_password = "hvac"
 
 # Display login form if user is not logged in
 if not st.session_state.logged_in:
