@@ -9,5 +9,4 @@ faiss_cpu
 ctransformers
 streamlit
 replicate
-streamlit_authenticator==0.1.5
 

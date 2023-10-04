@@ -5,9 +5,6 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.llms import Replicate
 import replicate
-import streamlit_authenticator as stauth
-from pathlib import Path
-import pickle
 
 # Setting up the environment variable
 REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
@@ -46,51 +43,47 @@ def load_qa_bot():
                                        chain_type_kwargs={'prompt': prompt})
 
 
-names=["Airlast"]
-usernames=['airlast']
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
 
-file_path=Path(__file__).parent / "hashed_pw.pkl"
-with file_path.open("rb") as file:
-    hashed_passwords=pickle.load(file)
+placeholder = st.empty()
+actual_email = st.secrets['username']
+actual_password = st.secrets['password']
 
-authenticator = stauth.Authenticate(names, usernames, hashed_passwords,
-    'some_cookie_name', 'some_signature_key', cookie_expiry_days=30)
+# Display login form if user is not logged in
+if not st.session_state.logged_in:
+    with placeholder.form("login"):
+        st.markdown("#### Enter your credentials")
+        email = st.text_input("Username")
+        password = st.text_input("Password", type="password")
+        submit = st.form_submit_button("Login")
 
-name, authentication_status, username = authenticator.login('Login', 'main')
+        if submit and email != actual_email and password != actual_password:
+            st.error("Incorrect username or password")
 
-if authentication_status== False:
-    st.error("Username/password is incorrect")
+        if submit and email == actual_email and password == actual_password:
+            st.session_state.logged_in = True
+            placeholder.empty()
 
-if authentication_status:
-    def app():
-        st.title('Airlast\'s HVAC Q&A Bot')
-        user_input = st.text_area("Ask anything related to HVAC:")
-        if st.button('Submit'):
-            progress_text = "Operation in progress. Please wait."
-            my_bar = st.progress(0)
-            progress_caption = st.caption(progress_text)
-            
-            try:
-                my_bar.progress(10)
+# Display bot if user is logged in
+if st.session_state.logged_in:
+    st.title('Airlast\'s HVAC Q&A Bot')
+    user_input = st.text_area("Ask anything related to HVAC:")
+    
+    if st.button('Submit'):
+        progress_text = "Operation in progress. Please wait."
+        my_bar = st.progress(0)
+        progress_caption = st.caption(progress_text)
+        
+        try:
+            my_bar.progress(10)
+            qa_bot = load_qa_bot()
+            my_bar.progress(50)
+            response = qa_bot({'query': user_input})
+            my_bar.progress(100)
+            st.write(response['result'])
+        except Exception as e:
+            st.error(f"An error occurred: {str(e)}")
 
-                qa_bot = load_qa_bot()
-                my_bar.progress(50)
-
-                response = qa_bot({'query': user_input})
-                my_bar.progress(100)
-
-                st.write(response['result'])
-
-            except Exception as e:
-                st.error(f"An error occurred: {str(e)}")
-
-            progress_caption.empty()
-            my_bar.empty()
-    authenticator.logout("logout","main")
-
-                        
-
-
-
-    if __name__ == "__main__":
-        app()
+        progress_caption.empty()
+        my_bar.empty()
