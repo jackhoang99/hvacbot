@@ -86,6 +86,11 @@ if authentication_status:
 
             progress_caption.empty()
             my_bar.empty()
+    authenticator.logout("logout","main")
+
+                        
+
+
 
     if __name__ == "__main__":
         app()
