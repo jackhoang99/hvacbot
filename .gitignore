@@ -1,2 +1,4 @@
 .venv
 data
+.streamlit/secrets.toml
+hashed_pw.pkl

@@ -5,8 +5,9 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.llms import Replicate
 import replicate
-
-
+import streamlit_authenticator as stauth
+from pathlib import Path
+import pickle
 
 # Setting up the environment variable
 REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
@@ -45,33 +46,46 @@ def load_qa_bot():
                                        chain_type_kwargs={'prompt': prompt})
 
 
-def app():
-    st.title('Airlast\'s HVAC Q&A Bot')
-    user_input = st.text_area("Ask anything related to HVAC:")
-    if st.button('Submit'):
-        progress_text = "Operation in progress. Please wait."
-        my_bar = st.progress(0)
-        progress_caption = st.caption(progress_text)
-        
-        try:
-            my_bar.progress(10)
+names=["Airlast"]
+usernames=['airlast']
 
-            qa_bot = load_qa_bot()
-            my_bar.progress(50)
+file_path=Path(__file__).parent / "hashed_pw.pkl"
+with file_path.open("rb") as file:
+    hashed_passwords=pickle.load(file)
 
-            response = qa_bot({'query': user_input})
-            my_bar.progress(100)
+authenticator = stauth.Authenticate(names, usernames, hashed_passwords,
+    'some_cookie_name', 'some_signature_key', cookie_expiry_days=30)
 
-            st.write(response['result'])
+name, authentication_status, username = authenticator.login('Login', 'main')
 
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
+if authentication_status== False:
+    st.error("Username/password is incorrect")
 
-        progress_caption.empty()
-        my_bar.empty()
-                    
+if authentication_status:
+    def app():
+        st.title('Airlast\'s HVAC Q&A Bot')
+        user_input = st.text_area("Ask anything related to HVAC:")
+        if st.button('Submit'):
+            progress_text = "Operation in progress. Please wait."
+            my_bar = st.progress(0)
+            progress_caption = st.caption(progress_text)
+            
+            try:
+                my_bar.progress(10)
 
+                qa_bot = load_qa_bot()
+                my_bar.progress(50)
 
+                response = qa_bot({'query': user_input})
+                my_bar.progress(100)
 
-if __name__ == "__main__":
-    app()
+                st.write(response['result'])
+
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
+
+            progress_caption.empty()
+            my_bar.empty()
+
+    if __name__ == "__main__":
+        app()
