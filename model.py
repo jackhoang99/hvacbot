@@ -78,7 +78,7 @@ if st.session_state.logged_in:
         try:
             my_bar.progress(10)
             qa_bot = load_qa_bot()
-            my_bar.progress(50)
+            my_bar.progress(65)
             response = qa_bot({'query': user_input})
             my_bar.progress(100)
             st.write(response['result'])
