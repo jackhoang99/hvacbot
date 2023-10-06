@@ -82,8 +82,8 @@ if st.session_state.logged_in:
             qa_bot = load_qa_bot()
             my_bar.progress(65)
             response = qa_bot({'query': user_input})
-            my_bar.progress(100)
             st.write(response['result'])
+            my_bar.progress(100)
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
 
