@@ -14,7 +14,7 @@ DB_FAISS_PATH = 'vectorstore/db_faiss'
 custom_prompt_template = """Use the following pieces of information to answer the user's question.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. 
 Don't include chapter or figure in your final answer. Do not acknowledge my request with "sure" or in any other way besides going straight to the answer. 
-Don't include base on information provided in your final answer.
+Don't mention base on information provided in your final answer.
 
 Context: {context}
 Question: {question}
