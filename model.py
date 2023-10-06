@@ -21,14 +21,14 @@ Question: {question}
 Helpful answer:
 """
 
-@st.cache(allow_output_mutation=True)
+@st.cache_data(allow_output_mutation=True)
 def load_llm():
     return Replicate(
         model="meta/llama-2-13b-chat:9dff94b1bed5af738655d4a7cbcdcde2bd503aa85c94334fe1f42af7f3dd5ee3",
         model_kwargs={"temperature": 0.5, "max_new_tokens": 500 , "top_p": 1},
     )
 
-@st.cache(allow_output_mutation=True)
+@st.cache_data(allow_output_mutation=True)
 def load_qa_bot():
         embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
                                         model_kwargs={'device': 'cpu'})
