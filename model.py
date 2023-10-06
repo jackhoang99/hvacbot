@@ -95,4 +95,3 @@ if st.session_state.logged_in:
         progress_caption.empty()
         my_bar.empty()
 
-        print(response) 
