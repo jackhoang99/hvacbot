@@ -26,7 +26,7 @@ def load_llm():
     )
 
 def load_qa_bot():
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2"
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
                                        model_kwargs={'device': 'cpu'})
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
     llm = load_llm()
@@ -37,6 +37,7 @@ def load_qa_bot():
                                        retriever=db.as_retriever(search_kwargs={'k': 2}),
                                        return_source_documents=True,
                                        chain_type_kwargs={'prompt': prompt})
+
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 placeholder = st.empty()
