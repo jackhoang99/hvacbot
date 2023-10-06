@@ -19,12 +19,12 @@ Question: {question}
 
 Helpful answer:
 """
-modelrp="meta/llama-2-13b-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5"
+modelrp="meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
 
 def load_llm():
     return Replicate(
         model=modelrp,
-        model_kwargs={"temperature": 0.75, "max_length": 600 , "top_p": 1},
+        model_kwargs={"temperature": 0.75, "max_new_tokens": 600 , "top_p": 1},
     )
 
 modelhf=st.secrets["modelhf"]
