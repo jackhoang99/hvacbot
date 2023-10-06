@@ -14,8 +14,7 @@ DB_FAISS_PATH = 'vectorstore/db_faiss'
 custom_prompt_template = """Use the following pieces of information to answer the user's question.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. 
 Don't include chapter or figure in your final answer. 
-Don't include base on information provided in your final answer.
-Just go straight to the answer.
+Don't mention base on information provided in your final answer.
 
 Context: {context}
 Question: {question}
@@ -27,7 +26,7 @@ modelrp="meta/llama-2-13b-chat:9dff94b1bed5af738655d4a7cbcdcde2bd503aa85c94334fe
 def load_llm():
     return Replicate(
         model=modelrp,
-        model_kwargs={"temperature": 0.5, "max_new_tokens": 500 , "top_p": 1},
+        model_kwargs={"temperature": 0.5, "max_new_tokens": 400 , "top_p": 1},
     )
 
 modelhf=st.secrets["modelhf"]
