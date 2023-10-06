@@ -5,6 +5,8 @@ from langchain.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain.llms import Replicate
 import replicate
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+
 
 # Setting up the environment variable
 REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
@@ -25,6 +27,8 @@ modelrp="meta/llama-2-13b-chat:9dff94b1bed5af738655d4a7cbcdcde2bd503aa85c94334fe
 
 def load_llm():
     return Replicate(
+        streaming=True,
+        callbacks=[StreamingStdOutCallbackHandler()],
         model=modelrp,
         model_kwargs={"temperature": 0.1, "max_new_tokens": 500 , "top_p": 1},
     )
