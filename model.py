@@ -18,7 +18,7 @@ Context: {context}
 Question: {question}
 Helpful answer:
 """
-modelrp="meta/llama-2-13b-chat:9dff94b1bed5af738655d4a7cbcdcde2bd503aa85c94334fe1f42af7f3dd5ee3"
+modelrp="meta/llama-2-13b-chat:f4e2de70d66816a838a89eeeb621910adffb0dd0baba3976c96980970978018d"
 def load_llm():
     return Replicate(
         model=modelrp,
