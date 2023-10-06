@@ -73,21 +73,13 @@ if st.session_state.logged_in:
     user_input = st.text_area("Ask anything related to HVAC:")
     qa_bot = load_qa_bot()
 
-    
-    if st.button('Submit'):
-        progress_text = "Operation in progress. Please wait."
-        my_bar = st.progress(0)
-        progress_caption = st.caption(progress_text)
         
-        try:
-            my_bar.progress(10)
-            response = qa_bot({'query': user_input})
-            my_bar.progress(65)
-            st.write(response['result'])
-            my_bar.progress(100)
-        except Exception as e:
-            st.error(f"An error occurred: {str(e)}")
+    if st.button('Submit'):
+        with st.spinner("Operation in progress. Please wait..."):
+            try:
+                response = qa_bot({'query': user_input})
+                st.write(response['result'])
+            except Exception as e:
+                st.error(f"An error occurred: {str(e)}")
 
-        progress_caption.empty()
-        my_bar.empty()
 
