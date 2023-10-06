@@ -24,7 +24,7 @@ modelrp=st.secrets['modelrp']
 def load_llm():
     return Replicate(
         model=modelrp,
-        model_kwargs={"temperature": 0.5, "max_length": 1500 , "top_p": 1},
+        model_kwargs={"temperature": 0.5, "max_length": 512 , "top_p": 1},
     )
 
 modelhf=st.secrets["modelhf"]
