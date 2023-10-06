@@ -15,6 +15,7 @@ custom_prompt_template = """Use the following pieces of information to answer th
 If you don't know the answer, just say that you don't know, don't try to make up an answer. 
 Don't include chapter or figure in your final answer. 
 Don't include base on information provided in your final answer.
+Just go straight to the answer.
 
 Context: {context}
 Question: {question}
@@ -44,7 +45,9 @@ def load_qa_bot():
                                        return_source_documents=True,
                                        chain_type_kwargs={'prompt': prompt})
 
-
+def clean_response(response):
+    # Split the response by line breaks, skip the first line, then rejoin
+    return '\n'.join(response.split('\n')[1:])
 
 
 
@@ -86,11 +89,11 @@ if st.session_state.logged_in:
             my_bar.progress(65)
             response = qa_bot({'query': user_input})
             my_bar.progress(100)
-            st.write(response)
-
+            st.write(response['result'])
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
 
         progress_caption.empty()
         my_bar.empty()
 
+        print(response) 
