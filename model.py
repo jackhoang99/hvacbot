@@ -70,6 +70,8 @@ if not st.session_state.logged_in:
 if st.session_state.logged_in:
     st.title('Airlast\'s HVAC Q&A Bot')
     user_input = st.text_area("Ask anything related to HVAC:")
+    qa_bot = load_qa_bot()
+
     
     if st.button('Submit'):
         progress_text = "Operation in progress. Please wait."
@@ -78,7 +80,6 @@ if st.session_state.logged_in:
         
         try:
             my_bar.progress(10)
-            qa_bot = load_qa_bot()
             my_bar.progress(65)
             response = qa_bot({'query': user_input})
             st.write(response['result'])
