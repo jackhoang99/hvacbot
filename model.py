@@ -23,7 +23,7 @@ modelrp="meta/llama-2-13b-chat:9dff94b1bed5af738655d4a7cbcdcde2bd503aa85c94334fe
 def load_llm():
     return Replicate(
         model=modelrp,
-        model_kwargs={"temperature": 0.75, "max_new_tokens": 500 , "top_p": 1},
+        model_kwargs={"temperature": 0.5, "max_new_tokens": 500 , "top_p": 1},
     )
 
 modelhf=st.secrets["modelhf"]
