@@ -24,9 +24,9 @@ def load_llm():
         model=modelrp,
         model_kwargs={"temperature": 0.5, "max_new_tokens": 500 , "top_p": 1},
     )
-modelhf=st.secrets["modelhf"]
+
 def load_qa_bot():
-    embeddings = HuggingFaceEmbeddings(model_name=modelhf,
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2"
                                        model_kwargs={'device': 'cpu'})
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
     llm = load_llm()
