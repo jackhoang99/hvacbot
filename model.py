@@ -34,6 +34,7 @@ def load_qa_bot():
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
     llm = load_llm()
     prompt = PromptTemplate(template=custom_prompt_template, input_variables=['context', 'question'])
+
     
     return RetrievalQA.from_chain_type(llm=llm,
                                        chain_type='stuff',
@@ -80,8 +81,8 @@ if st.session_state.logged_in:
         
         try:
             my_bar.progress(10)
-            my_bar.progress(65)
             response = qa_bot({'query': user_input})
+            my_bar.progress(65)
             st.write(response['result'])
             my_bar.progress(100)
         except Exception as e:
