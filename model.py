@@ -21,28 +21,30 @@ Question: {question}
 Helpful answer:
 """
 
+@st.cache(allow_output_mutation=True)
 def load_llm():
     return Replicate(
         model="meta/llama-2-13b-chat:9dff94b1bed5af738655d4a7cbcdcde2bd503aa85c94334fe1f42af7f3dd5ee3",
         model_kwargs={"temperature": 0.5, "max_new_tokens": 500 , "top_p": 1},
     )
 
-
+@st.cache(allow_output_mutation=True)
 def load_qa_bot():
-    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
-                                       model_kwargs={'device': 'cpu'})
-    db = FAISS.load_local(DB_FAISS_PATH, embeddings)
-    llm = load_llm()
-    prompt = PromptTemplate(template=custom_prompt_template, input_variables=['context', 'question'])
+        embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
+                                        model_kwargs={'device': 'cpu'})
+        db = FAISS.load_local(DB_FAISS_PATH, embeddings)
+        llm = load_llm()
+        prompt = PromptTemplate(template=custom_prompt_template, input_variables=['context', 'question'])
 
-    
-    return RetrievalQA.from_chain_type(llm=llm,
-                                       chain_type='stuff',
-                                       retriever=db.as_retriever(search_kwargs={'k': 2}),
-                                       return_source_documents=True,
-                                       chain_type_kwargs={'prompt': prompt})
+        
+        return RetrievalQA.from_chain_type(llm=llm,
+                                        chain_type='stuff',
+                                        retriever=db.as_retriever(search_kwargs={'k': 2}),
+                                        return_source_documents=True,
+                                        chain_type_kwargs={'prompt': prompt})
 
 
+qa_bot = load_qa_bot()
 
 
 if 'logged_in' not in st.session_state:
@@ -71,7 +73,6 @@ if not st.session_state.logged_in:
 if st.session_state.logged_in:
     st.title('Airlast\'s HVAC Q&A Bot')
     user_input = st.text_area("Ask anything related to HVAC:")
-    qa_bot = load_qa_bot()
 
         
     if st.button('Submit'):
