@@ -13,8 +13,8 @@ REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
 DB_FAISS_PATH = 'vectorstore/db_faiss'
 custom_prompt_template = """Use the following pieces of information to answer the user's question.
 If you don't know the answer, just say that you don't know, don't try to make up an answer. 
-Don't include chapter or figure in your final answer. Do not acknowledge my request with "Sure" or in any other way besides going straight to the answer. 
-Don't mention base on information provided in your final answer.
+Don't include chapter or figure in your final answer. 
+Don't include base on information provided in your final answer.
 
 Context: {context}
 Question: {question}
@@ -43,6 +43,9 @@ def load_qa_bot():
                                        retriever=db.as_retriever(search_kwargs={'k': 2}),
                                        return_source_documents=True,
                                        chain_type_kwargs={'prompt': prompt})
+
+
+
 
 
 if 'logged_in' not in st.session_state:
@@ -83,9 +86,11 @@ if st.session_state.logged_in:
             my_bar.progress(65)
             response = qa_bot({'query': user_input})
             my_bar.progress(100)
-            st.write(response['result'])
+            st.write(response)
+
         except Exception as e:
             st.error(f"An error occurred: {str(e)}")
 
         progress_caption.empty()
         my_bar.empty()
+
