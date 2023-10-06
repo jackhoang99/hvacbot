@@ -21,18 +21,16 @@ Question: {question}
 
 Helpful answer:
 """
-modelrp="meta/llama-2-13b-chat:9dff94b1bed5af738655d4a7cbcdcde2bd503aa85c94334fe1f42af7f3dd5ee3"
 
 def load_llm():
     return Replicate(
-        model=modelrp,
+        model="meta/llama-2-13b-chat:9dff94b1bed5af738655d4a7cbcdcde2bd503aa85c94334fe1f42af7f3dd5ee3",
         model_kwargs={"temperature": 0.5, "max_new_tokens": 500 , "top_p": 1},
     )
 
-modelhf=st.secrets["modelhf"]
 
 def load_qa_bot():
-    embeddings = HuggingFaceEmbeddings(model_name=modelhf,
+    embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
                                        model_kwargs={'device': 'cpu'})
     db = FAISS.load_local(DB_FAISS_PATH, embeddings)
     llm = load_llm()
@@ -44,9 +42,6 @@ def load_qa_bot():
                                        return_source_documents=True,
                                        chain_type_kwargs={'prompt': prompt})
 
-def clean_response(response):
-    # Split the response by line breaks, skip the first line, then rejoin
-    return '\n'.join(response.split('\n')[1:])
 
 
 
