@@ -1,10 +1,12 @@
-import streamlit as st
-from langchain import PromptTemplate
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.chains import RetrievalQA
-from langchain.llms import Replicate
 import replicate
+import streamlit as st
+from langchain.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.llms import Replicate
+from langchain_community.vectorstores import FAISS
+from langchain_core.prompts import PromptTemplate
+from langchain.chains import RetrievalQA
+
 # Setting up the environment variable
 REPLICATE_API_TOKEN = st.secrets["REPLICATE_API_TOKEN"]
 # Define constants
@@ -28,7 +30,7 @@ def load_llm():
 def load_qa_bot():
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",
                                        model_kwargs={'device': 'cpu'})
-    db = FAISS.load_local(DB_FAISS_PATH, embeddings)
+    db = FAISS.load_local(DB_FAISS_PATH, embeddings,allow_dangerous_deserialization=True)
     llm = load_llm()
     prompt = PromptTemplate(template=custom_prompt_template, input_variables=['context', 'question'])
     
@@ -41,8 +43,8 @@ def load_qa_bot():
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
 placeholder = st.empty()
-actual_email = "airlast"
-actual_password = "hvac"
+actual_email = st.secrets["actual_email"]
+actual_password = st.secrets["actual_password"]
 # Display login form if user is not logged in
 if not st.session_state.logged_in:
     with placeholder.form("login"):
